@@ -13,15 +13,15 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 app.use(express.json());
 app.use(express.static("public"));
 
-// 서버 시작 시 PDF 텍스트 추출
+// PDF 텍스트 캐시 (서버리스 warm 재사용)
 let pdfText = "";
 
 async function loadPDF() {
+  if (pdfText) return; // 이미 로드된 경우 재사용
   const docsDir = path.join(__dirname, "docs");
   const files = fs.readdirSync(docsDir).filter((f) => f.endsWith(".pdf"));
   if (files.length === 0) {
-    console.warn("docs/ 폴더에 PDF 파일이 없습니다.");
-    return;
+    throw new Error("docs/ 폴더에 PDF 파일이 없습니다.");
   }
   const pdfPath = path.join(docsDir, files[0]);
   const dataBuffer = fs.readFileSync(pdfPath);
@@ -36,8 +36,11 @@ app.post("/api/chat", async (req, res) => {
   if (!question) {
     return res.status(400).json({ error: "질문을 입력해주세요." });
   }
-  if (!pdfText) {
-    return res.status(500).json({ error: "PDF 문서가 로드되지 않았습니다." });
+
+  try {
+    await loadPDF();
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 
   try {
@@ -75,9 +78,13 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// 서버 시작
-loadPDF().then(() => {
-  app.listen(PORT, () => {
-    console.log(`서버 실행 중: http://localhost:${PORT}`);
+// 로컬 실행 시에만 listen (Vercel 서버리스에서는 module.exports로 처리)
+if (require.main === module) {
+  loadPDF().then(() => {
+    app.listen(PORT, () => {
+      console.log(`서버 실행 중: http://localhost:${PORT}`);
+    });
   });
-});
+}
+
+module.exports = app;
