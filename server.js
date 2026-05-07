@@ -8,7 +8,11 @@ const pdfParse = require("pdf-parse");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let openai;
+function getOpenAI() {
+  if (!openai) openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return openai;
+}
 
 app.use(express.json());
 app.use(express.static("public"));
@@ -44,7 +48,7 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
         {
