@@ -10,7 +10,10 @@ const PORT = process.env.PORT || 3000;
 
 let openai;
 function getOpenAI() {
-  if (!openai) openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  if (!openai) openai = new OpenAI({
+    apiKey: process.env.SAMBANOVA_API_KEY,
+    baseURL: "https://api.sambanova.ai/v1",
+  });
   return openai;
 }
 
@@ -49,7 +52,7 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     const response = await getOpenAI().chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: "Llama-4-Maverick-17B-128E-Instruct",
       messages: [
         {
           role: "system",
