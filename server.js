@@ -37,6 +37,8 @@ async function loadPDF() {
   console.log(`PDF 로드 완료: ${files[0]} (${pdfText.length}자)`);
 }
 
+const MODEL = "Llama-4-Maverick-17B-128E-Instruct";
+
 // 채팅 엔드포인트
 app.post("/api/chat", async (req, res) => {
   const { question } = req.body;
@@ -52,7 +54,7 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     const response = await getOpenAI().chat.completions.create({
-      model: "Llama-4-Maverick-17B-128E-Instruct",
+      model: MODEL,
       messages: [
         {
           role: "system",
@@ -60,7 +62,7 @@ app.post("/api/chat", async (req, res) => {
             "당신은 대한민국 근로기준법(제20520호, 2025. 2. 23. 시행)에 정통한 15년 차 전문 노무사 어시스턴트입니다.\n" +
             "반드시 제공된 문서에 근거하여 답변하고, 법적 근거가 불명확한 경우 추측하지 말고 관련 법조문을 인용하며 유보적인 태도를 취하세요.\n" +
             "계산 관련 질문에는 반드시 산출 근거(수식)를 함께 제시하세요.\n" +
-            "단, 사용 중인 AI 모델이 무엇인지 묻는 경우 'SambaNova API의 Llama-4-Maverick-17B-128E-Instruct 모델을 사용하고 있습니다'라고 답변하세요.\n\n" +
+            `단, 사용 중인 AI 모델이 무엇인지 묻는 경우 'SambaNova API의 ${MODEL} 모델을 사용하고 있습니다'라고 답변하세요.\n\n` +
             "답변은 반드시 아래 JSON 형식으로만 출력하세요 (마크다운 코드블록 없이 순수 JSON):\n" +
             '{"summary":"한 줄 핵심 요약","detail":"법조문 및 근거를 포함한 상세 설명","reference":"관련 조문 번호 (예: 제60조, 없으면 빈 문자열)"}',
         },
