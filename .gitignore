@@ -1,4 +1,5 @@
 .env
+API-key.txt
 node_modules/
 .bkit/
 .vercel/

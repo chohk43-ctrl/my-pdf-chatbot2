@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>L-Bot — 근로기준법 챗봇</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>⚖️ L-Bot</h1>
+        <p class="subtitle">근로기준법(제20520호) 전문 어시스턴트</p>
+      </header>
+
+      <div class="quick-buttons">
+        <button class="quick-btn" data-q="연차 유급휴가는 어떻게 계산하나요?">연차 계산</button>
+        <button class="quick-btn" data-q="해고 예고는 언제 해야 하나요?">해고 예고</button>
+        <button class="quick-btn" data-q="법정 근로시간은 몇 시간인가요?">법정 근로시간</button>
+        <button class="quick-btn" data-q="퇴직금 계산 방법을 알려주세요.">퇴직금 계산</button>
+      </div>
+
+      <div id="chat-box" class="chat-box"></div>
+
+      <div class="disclaimer">
+        본 서비스의 답변은 법적 효력이 없으며, 참고용으로만 사용하시기 바랍니다. 구체적인 사안은 반드시 전문가와 상담하십시오.
+      </div>
+
+      <div class="input-area">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="근로기준법에 관해 질문하세요..."
+          autocomplete="off"
+        />
+        <button id="send-btn">전송</button>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
