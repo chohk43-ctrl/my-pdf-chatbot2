@@ -15,7 +15,7 @@ function getOpenAI() {
 }
 
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // PDF 텍스트 캐시 (서버리스 warm 재사용)
 let pdfText = "";
